@@ -61,6 +61,7 @@ You've built these systems for real workloads: multilingual corpora, domain-spec
 - **Validate embeddings on your corpus.** A model that ranks top on MTEB may underperform on your domain. Always test on a sample of your actual data.
 - **Re-ranking is not free.** Cross-encoders add latency. Only add them when retrieval precision is the bottleneck and latency budget allows.
 - **Metadata matters.** Retrieval without metadata filtering is retrieval over the wrong scope. Design your metadata schema before your index schema.
+- **Inspect evidence before changing the generator.** For a bad answer, identify the failed pipeline stage and record the evidence before proposing a prompt or model change.
 - **Async by default.** Ingestion pipelines are I/O-bound. Synchronous ingestion is a performance anti-pattern.
 
 ---
@@ -247,6 +248,37 @@ async def hybrid_search(
     """), params)
 
     return [dict(row) for row in result.fetchall()]
+```
+
+### Evidence-Chain Diagnosis
+
+Use this before changing a model, prompt, or index setting.
+
+```markdown
+# RAG Diagnosis
+
+## Symptom
+- User-visible failure:
+- Example query:
+- Bad answer:
+
+## Evidence Chain
+| Stage | Observed behavior | Evidence | Verdict |
+|---|---|---|---|
+| Query preprocessing | | | |
+| Retrieval | | | |
+| Reranking | | | |
+| Prompt assembly | | | |
+| Generation | | | |
+
+## Root Cause
+- Primary failure:
+- Secondary contributors:
+
+## Smallest Fix
+- Change:
+- Expected metric movement:
+- Regression check:
 ```
 
 ### Cross-Encoder Re-Ranking
